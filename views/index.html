@@ -1,0 +1,58 @@
+<html>
+
+<head>
+    <title>Nodejs Configs</title>
+    <style>
+        div {
+            margin: 10px 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        The awesome exchange rate
+    </header>
+    <div>
+        <div id="currency-heading"></div>
+        <div id="currency-table"></div>
+    </div>
+</body>
+<script>
+    const renderView = ({
+        date,
+        base,
+        rates
+    }) => {
+        document.getElementById('currency-heading').innerHTML =
+            `<div>Updated : <b>${date}</b> and based on <b>${base}<b></div>`;
+
+
+        const createRow = ({
+            currency,
+            rate
+        }) => `<tr>
+            <td>${currency}</td>
+            <td>${rate}</td>
+            </tr>`;
+
+        document.getElementById('currency-table').innerHTML =
+            `
+            <table>
+                <thead>
+                    <tr>
+                        <th>Currency to ${base} </th> 
+                        <th>Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${Object.keys(rates).map(currency => createRow({currency, rate: rates[currency]})).join('')}    
+                </tbody>    
+            </table>
+        `
+    }
+
+    fetch('/api/latest').then(res => res.json()).then(renderView);
+</script>
+
+</html>
