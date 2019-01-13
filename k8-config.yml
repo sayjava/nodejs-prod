@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: nodeapp-svc
+spec:
+    ports:
+        - port: 8080
+          targetPort: 8080
+          name: http
+          protocol: TCP
+    selector:
+        name: nodeapp
+        tier: frontend
+
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+    name: nodeapp
+spec:
+    selector:
+        matchLabels:
+            name: nodeapp
+            tier: frontend
+    template:
+        metadata:
+            labels:
+                name: nodeapp
+                tier: frontend
+        spec:
+            containers:
+                - name: nodes-app
+                  image: nodeapp
+                  imagePullPolicy: IfNotPresent
+                  ports:
+                      - containerPort: 8080
+                  envFrom:
+                      - configMapRef:
+                            name: nodeapp-config
