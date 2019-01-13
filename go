@@ -18,14 +18,19 @@ dev () {
     echo -e "Starting dev"
     # locally expand the configuration in the dev.env into process.env
     export $(cat config/dev.env | xargs) 
-    node index.js
+    NODE_ENV=development node index.js
+}
+
+build () {
+    echo -e "Building the docker image to be deployed"
+    docker build -t nodeapp .
 }
 
 start () {
     echo -e "Starting start"
     #  in a prod environment, we expect the envs to be 
     #  provided by config-maps not by export $(cat config/prod.env | xargs)
-    node index.js
+    NODE_ENV=production node index.js
 }
 
 create-config-map () {
@@ -42,6 +47,7 @@ create-config-map () {
 deploy () {
     echo -e "Starting deployment"
     
+    build
 
     # generate the config map for prod environment
     # the config must be generated before deploying the app
