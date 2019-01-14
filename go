@@ -63,6 +63,7 @@ deploy () {
 # local kubernettes deployment token
 local-k8-admin () {
     # generate a token for the local k8-dashboard app
+    # see https://github.com/kubernetes/dashboard/wiki/Creating-sample-user
     kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | \
     grep admin-user | \
     awk '{print $1}')
